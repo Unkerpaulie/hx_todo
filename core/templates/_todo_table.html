@@ -1,0 +1,40 @@
+    <!-- todo table -->
+    <table class="table table-zebra table-lg" id="todo-table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Due Date</th>
+                <th>Done</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if todos %}
+            {% for todo in todos %}
+            <tr>
+                <td>
+                    <a hx-get="{% url "display_todo" todo.id %}" onclick="todo_modal.showModal()" 
+                        hx-target="#todo-form" hx-swap="outerHTML" 
+                        class="hover:underline hover:cursor-pointer hover:brightness-150">
+                        {{ todo.title }}
+                    </a>
+                </td>
+                <td>
+                    {% if todo.is_overdue %}<span class="text-red-500">{{ todo.due_date }} (overdue)</span>
+                    {% else %}{{ todo.due_date }}{% endif %}
+                </td>
+                <td>
+
+                    <input type="checkbox"{% if todo.done %} checked{% endif %} 
+                        class="checkbox checkbox-sm checkbox-success" 
+                        hx-post="{% url "toggle_todo" todo.id %}" hx-trigger="click" 
+                        hx-target="#todo-table" hx-swap="outerHTML" />
+                </td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="4">No tasks found.</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
